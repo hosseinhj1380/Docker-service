@@ -1,4 +1,8 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from .models import RunDockerModel
 
-class HelloWorldSerializer(serializers.Serializer):
-    message = serializers.CharField(max_length=100)
+class RunDockerSerializer (ModelSerializer):
+    class Meta:
+        model=RunDockerModel
+        fields="__all__"
+    

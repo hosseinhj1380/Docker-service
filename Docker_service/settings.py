@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps',
-    'apps.create_docker_app',
     'apps.CRUD_docker_apps',
     'apps.run_docker_app',
     
