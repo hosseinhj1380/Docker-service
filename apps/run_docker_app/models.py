@@ -8,6 +8,8 @@ class RunDockerModel(models.Model):
     command=models.CharField(null=True,blank=True, max_length=50)
     logs=models.ForeignKey("Logs",on_delete=models.CASCADE,null=True, blank=True)
 
+
 class Logs(models.Model):
     date = models.DateField(auto_now_add=True,verbose_name="date writed ")
     parameters=models.CharField(blank=False,null=False,max_length=255)
+    status=models.CharField(max_length=20,default=False)
