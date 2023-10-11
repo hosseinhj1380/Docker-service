@@ -4,5 +4,5 @@ from .models import RunDockerModel
 class RunDockerSerializer (ModelSerializer):
     class Meta:
         model=RunDockerModel
-        fields="__all__"
+        fields=["name","image","envs","command"]
     
