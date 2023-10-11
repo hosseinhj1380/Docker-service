@@ -10,6 +10,6 @@ class RunDockerModel(models.Model):
 
 
 class Logs(models.Model):
-    date = models.DateField(auto_now_add=True,verbose_name="date writed ")
+    date = models.DateTimeField(auto_now_add=True,verbose_name="date writed ")
     parameters=models.CharField(blank=False,null=False,max_length=255)
     status=models.CharField(max_length=20,default=False)

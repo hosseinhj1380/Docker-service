@@ -32,10 +32,3 @@ def run_docker(parameters):
             }
 
 
-print(run_docker(parameters={
-"name": "my-app",
-"image": "hello-world",
-"envs": {"key1": "val1","key2": "val2"},
-"command": "sleep 1000"
-}))
-
