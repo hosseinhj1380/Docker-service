@@ -1,30 +1,21 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView , ApiView
 from.serializers import CreateDockerSerializers
 from .models import CreateDockerModel
 from rest_framework.response import Response
 from rest_framework import status
 from apps.services.CRUDservices import create_docker,docker_app_lists,docker_single_app_info,delete_docker_app
- 
+from rest_framework.views import APIView
 # Create your views here.
-@api_view(["GET"])
-def docker_app_list(request):
+
     
-    return Response(docker_app_lists())
 
-
-
-@api_view(["POST"])
-def create_docker_app(request):
-    if request.method=="POST":
-
+class DockerApp(ApiView):
+    serializer_class = CreateDockerSerializers
+    def post(self, request, *args, **kwargs):
         serializer=CreateDockerSerializers(data=request.data)
-        
         if serializer.is_valid():
-            
-
-            
             result=create_docker(parameters=
                 {
                 "name":serializer.validated_data["name"],
@@ -36,21 +27,23 @@ def create_docker_app(request):
             serializer.save()
             return Response(result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        return Response(docker_app_lists())
 
-@api_view(["GET","PUT","DELETE"])
-def docker_app_management(request,repository):
-    if request.method=="GET":
 
-        if repository :
+class DockerAppManagement(APIView):
+    
+    def get(self , request , *args , **kwargs):
+        repository=self.kwargs.get("repository") 
+        if repository:
             result=docker_single_app_info(repository)
             
             return Response(result,status=status.HTTP_200_OK)
-
-
-    elif request.method=="PUT":
+    def put(self , request , *args , **kwargs):
         delete_result=delete_docker_app(repository=repository)
 
         if isinstance(delete_result,list):
+            repository=self.kwargs.get("repository") 
             serializer=CreateDockerSerializers(data=request.data)
 
             if serializer.is_valid():
@@ -66,14 +59,11 @@ def docker_app_management(request,repository):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response("dockerapp with this repository is not found",status=status.HTTP_404_NOT_FOUND)
-
-            
-    elif request.method=="DELETE":
-
+        
+    def delete(self , request , *args , **kwargs):
+        repository=self.kwargs.get("repository") 
         if repository: 
 
             result=delete_docker_app(repository=repository)
             return Response(result,status=status.HTTP_200_OK)
         
-
-
