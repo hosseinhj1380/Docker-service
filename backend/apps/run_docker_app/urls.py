@@ -1,9 +1,9 @@
 from django.urls import path, include
-from .views import run_docker_app
+from .views import RunDockerApp
 
 
 
 urlpatterns = [
-    path('',run_docker_app)
+    path('',RunDockerApp.as_view())
 ]
 
