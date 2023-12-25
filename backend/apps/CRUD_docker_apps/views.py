@@ -5,7 +5,7 @@ from.serializers import CreateDockerSerializers
 from .models import CreateDockerModel
 from rest_framework.response import Response
 from rest_framework import status
-from apps.services.CRUDservices import create_docker,docker_app_lists,docker_single_app_info,delete_docker_app
+from apps.services.CRUDservices import CRUDapp
 from rest_framework.views import APIView
 # Create your views here.
 
@@ -16,7 +16,8 @@ class DockerApp(ApiView):
     def post(self, request, *args, **kwargs):
         serializer=CreateDockerSerializers(data=request.data)
         if serializer.is_valid():
-            result=create_docker(parameters=
+            obj = CRUDapp()
+            result=obj.create_docker(parameters=
                 {
                 "name":serializer.validated_data["name"],
                 "image":serializer.validated_data["image"],
@@ -28,7 +29,9 @@ class DockerApp(ApiView):
             return Response(result, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get(self, request):
-        return Response(docker_app_lists())
+        obj = CRUDapp()
+        
+        return Response(obj.docker_app_lists())
 
 
 class DockerAppManagement(APIView):
@@ -36,18 +39,22 @@ class DockerAppManagement(APIView):
     def get(self , request , *args , **kwargs):
         repository=self.kwargs.get("repository") 
         if repository:
-            result=docker_single_app_info(repository)
+            obj = CRUDapp()
+            
+            result=obj.docker_single_app_info(repository)
             
             return Response(result,status=status.HTTP_200_OK)
     def put(self , request , *args , **kwargs):
-        delete_result=delete_docker_app(repository=repository)
+        obj = CRUDapp()
+        
+        delete_result=obj.delete_docker_app(repository=repository)
 
         if isinstance(delete_result,list):
             repository=self.kwargs.get("repository") 
             serializer=CreateDockerSerializers(data=request.data)
 
             if serializer.is_valid():
-                create_result=create_docker(parameters=
+                create_result=obj.create_docker(parameters=
                 {
                 "name":serializer.validated_data["name"],
                 "image":serializer.validated_data["image"],
@@ -63,7 +70,9 @@ class DockerAppManagement(APIView):
     def delete(self , request , *args , **kwargs):
         repository=self.kwargs.get("repository") 
         if repository: 
+            obj = CRUDapp()
+            
 
-            result=delete_docker_app(repository=repository)
+            result=obj.delete_docker_app(repository=repository)
             return Response(result,status=status.HTTP_200_OK)
         
